@@ -1,0 +1,24 @@
+#######################################################################
+# This script is the preliminary code for the loop function named
+# "WaitForPlayer". The purpose of this function is to continuously loop
+# until a new player input is received and ready to be evaluated.
+#
+# Group 6
+# Last Edited: 11/3/2019
+#######################################################################
+
+#assuming "PlayerInput" value is stored at memory address 0xAFFF = 45055
+movi $45055, R2;
+
+#assuming the switch value to be evaluated is in memory address 0xAFFE = 45054
+movi $45054, R3;
+
+WaitForPlayer:
+   # Once better defined in whole system --> add function caller/callee protocol
+   load R4, R2; 	# Load PlayerInput value into R3
+   cmp  R4, R0; 	# If (PlayerInput == 0)
+   je 	WaitForPlayer;	#   loop again
+   stor R0, R2; 	# Else -> set PlayerInput value to default
+   load R5, R3;		#   load switch value into R5
+   juc  CheckCorrectness; # jump to function that evaluates correctness
+

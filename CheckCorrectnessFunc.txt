@@ -1,0 +1,58 @@
+#######################################################################
+# This script is the preliminary code for the function named
+# "CheckCorrectness". The purpose of this function is to evaluate the 
+# player's input in order to see if it is correct and furthermore, how
+# the scores should be updated.
+#
+# Group 6
+# Last Edited: 11/3/2019
+#######################################################################
+
+#assuming LFSR value for this round is stored at memory address 0xB001 = 45057
+movi $45057, R2;
+
+#assuming FirstPlayerFlag is stored at memory address 0xAFFD = 45053
+movi $45053, R3;
+
+# Input "switch value" that is to be assessed is in R5 from WaitForPlayer function
+
+CheckCorrectness:
+   load R4, R2;		# Load LFSR value for this round into R3
+   cmp 	R4, R5;		# If (LFSR value != switch value)
+   jne 	WaitForPlayer;	#   jump to WaitForPlayerFunction  
+			    ###possibly come back and add a screen display before this.
+   load R6, R3;		# Load firstPlayerFlag into R6
+			# Determine who the first player was:
+   cmp R0, R6;		# If(first player == 0) a.k.a Player 1
+   je awardFirstPlayer;	#   jump to award first player's point
+   cmp $1, R6;		# If(first player == 1) a.k.a Player 2
+   je awardSecPlayer;	#   jump to award second player's point
+   cmp $2, R6;		# If(first player == 2) a.k.a Player 3
+   je awardThirdPlayer;	#   jump to award third player's point
+   cmp $3, R6;		# If(first player == 3) a.k.a Player 4
+   je awardFourthPlayer; #  jump to award fourth player's point
+
+awardFirstPlayer:
+   movi $45312, R7;	# assuming Player 1's point lives in memory location 0xb100
+   juc incrementPt;	# jump to increment point;
+   
+awardSecPlayer:
+   movi $45313, R7;	# assuming Player 2's point lives in memory location 0xb101
+   juc incrementPt;	# jump to increment point;
+
+awardThirdPlayer:
+   movi $45314, R7;	# assuming Player 3's point lives in memory location 0xb102
+   juc incrementPt;	# jump to increment point;
+
+awardFourthPlayer:
+   movi $45315, R7;	# assuming Player 3's point lives in memory location 0xb103
+   juc incrementPt;	# jump to increment point;
+
+incrementPt:
+   load R8, R7;		# Load Player's current point value into R8
+   add $1, R8;		# Player's current points + 1
+   stor R8, R7;		# Store Player's updated point back into memory
+   juc CheckCorrectnessEnd;
+
+CheckCorrectnessEnd:
+   juc Display;		# Jump to function to display scoreboard, etc. on screen.
