@@ -9,10 +9,13 @@
 #######################################################################
 
 #assuming LFSR value for this round is stored at memory address 0xB001 = 45057
-movi $45057, R2;
+movi 0x01, R2;
+lui 0xB0, R2;
 
 #assuming FirstPlayerFlag is stored at memory address 0xAFFD = 45053
-movi $45053, R3;
+movi 0xFD, R3;
+lui 0xAF, R3;
+
 
 # Input "switch value" that is to be assessed is in R5 from WaitForPlayer function
 
@@ -24,28 +27,32 @@ CheckCorrectness:
    load R6, R3;		# Load firstPlayerFlag into R6
 			# Determine who the first player was:
    cmp R0, R6;		# If(first player == 0) a.k.a Player 1
-   je awardFirstPlayer;	#   jump to award first player's point
+   jeq awardFirstPlayer;	#   jump to award first player's point
    cmp $1, R6;		# If(first player == 1) a.k.a Player 2
-   je awardSecPlayer;	#   jump to award second player's point
+   jeq awardSecPlayer;	#   jump to award second player's point
    cmp $2, R6;		# If(first player == 2) a.k.a Player 3
-   je awardThirdPlayer;	#   jump to award third player's point
+   jeq awardThirdPlayer;	#   jump to award third player's point
    cmp $3, R6;		# If(first player == 3) a.k.a Player 4
-   je awardFourthPlayer; #  jump to award fourth player's point
+   jeq awardFourthPlayer; #  jump to award fourth player's point
 
 awardFirstPlayer:
-   movi $45312, R7;	# assuming Player 1's point lives in memory location 0xb100
+   movi 0x00, R7;	# assuming Player 1's point lives in memory location 0xb100
+   lui 0xB1, R7;	
    juc incrementPt;	# jump to increment point;
    
 awardSecPlayer:
-   movi $45313, R7;	# assuming Player 2's point lives in memory location 0xb101
+   movi 0x01, R7;	# assuming Player 2's point lives in memory location 0xb101
+   lui 0xB1, R7;		
    juc incrementPt;	# jump to increment point;
 
 awardThirdPlayer:
-   movi $45314, R7;	# assuming Player 3's point lives in memory location 0xb102
+   movi 0x02, R7;	# assuming Player 3's point lives in memory location 0xb102
+   lui 0xB1, R7;	
    juc incrementPt;	# jump to increment point;
 
 awardFourthPlayer:
-   movi $45315, R7;	# assuming Player 3's point lives in memory location 0xb103
+   movi 0x03, R7;	# assuming Player 3's point lives in memory location 0xb103
+   lui 0xB1, R7;		
    juc incrementPt;	# jump to increment point;
 
 incrementPt:

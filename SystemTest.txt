@@ -1,0 +1,52 @@
+#########################################################################
+# This script is for testing the functionality of the entire game system,
+# specifically the interaction between the application, processor, and I/O
+# devices. Although this script is just for testing, we wanted to replicate
+# a portion of the application we will need when programming the actual 
+# application: displaying the random numbers on the screen via the VGA.
+#
+# This script will display the random number generated from the LFSR on the VGA
+# screen. It will then read some input from a button press, and flash the screen
+# with the color of the controller that sent in the signal.
+#
+# Group 6
+# Last Edited: 11/10/2019
+#########################################################################
+
+# Assuming Random number from LFSR is stored at memory address 0xAFFF = 45055
+# Note about LFSR: The LFSR(random number generator register) is implemented in hardware
+# 		and will continuously generate a random number with every clock cycle.
+#		This code is on git. Because this is continuous, in the actual application
+#		I plan to store the random value for the current round in a different adr
+#		in memory. This can be seen in the memory mapping in our documentation.
+# I forgot what adr I put in the memory mapped diagram so this # may be changed
+# accordingly.
+movi 0xFF, R2;
+lui 0xAF, R2;
+
+#assuming the I/O space of memory is @ memory address 0xC001 = 49153
+movi 0x01, R3;
+lui 0xC0, R3;
+
+####################################
+# Displaying random number on screen
+####################################
+
+# Load random number from LFSR adr
+load R4, R2; # R4 = random number
+
+# Display random number on VGA screen --> done by writing to I/O space in memory mapping
+# Note: I am still unsure as to how this will go through the VGA controller to get the
+# correct glyphs. I believe we need to have something in our processor that says like when
+# youre writing to this range of addresses, call the VGA controller or something like that
+stor R4, R3;
+
+
+#######################################
+# Flashing screen based on button press
+#######################################
+
+# Need to clarify how this is going to work with I/O but i'm thinking...
+# Continuous check for button press --> something similar to "ContinuousLoopFunc"
+
+# Write to I/O address like above. 

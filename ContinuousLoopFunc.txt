@@ -8,10 +8,12 @@
 #######################################################################
 
 #assuming "PlayerInput" value is stored at memory address 0xAFFF = 45055
-movi $45055, R2;
+movi 0xFF, R2;
+lui 0xAF, R2;
 
 #assuming the switch value to be evaluated is in memory address 0xAFFE = 45054
-movi $45054, R3;
+movi 0xFE, R3;
+lui 0xAF, R3;
 
 WaitForPlayer:
    # Once better defined in whole system --> add function caller/callee protocol
