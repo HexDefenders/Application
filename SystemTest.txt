@@ -13,20 +13,18 @@
 # Last Edited: 11/10/2019
 #########################################################################
 
-# Assuming Random number from LFSR is stored at memory address 0xAFFF = 45055
+# Assuming Random number from LFSR is stored at memory address 0x0024
 # Note about LFSR: The LFSR(random number generator register) is implemented in hardware
 # 		and will continuously generate a random number with every clock cycle.
 #		This code is on git. Because this is continuous, in the actual application
 #		I plan to store the random value for the current round in a different adr
 #		in memory. This can be seen in the memory mapping in our documentation.
-# I forgot what adr I put in the memory mapped diagram so this # may be changed
-# accordingly.
-movi 0xFF, R2;
-lui 0xAF, R2;
+movi 0x24, R2;
+lui 0x00, R2;
 
-#assuming the I/O space of memory is @ memory address 0xC001 = 49153
-movi 0x01, R3;
-lui 0xC0, R3;
+# Assuming the VGA address in I/O space @ memory address 0x002D
+movi 0x2D, R3;
+lui 0x00, R3;
 
 ####################################
 # Displaying random number on screen
