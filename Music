@@ -1,0 +1,123 @@
+// NOTES (by period)
+#define low 58
+#define c 262 // middle c
+#define d 294
+#define e 330
+#define f 349
+#define fsharp 370
+#define g 392
+#define aflat 415
+#define a 440
+#define asharp 466
+#define b 494
+#define C 523
+#define D 587
+#define E 659
+#define rest 0
+
+//Other setup
+#define speakerOut 3
+int mode;
+
+void setup() {
+  //Declaring pins
+  pinMode(speakerOut, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(8, INPUT);
+  pinMode(9, INPUT);
+  pinMode(10, INPUT);
+  //playSong(4);
+  //tone(speakerOut, low, 125);
+
+  //Calculating mode based off binary input
+  int lowBit = digitalRead(8);
+  int midBit = digitalRead(9) * 2;
+  int highBit = digitalRead(10) * 4;
+  //mode = lowBit + highBit + midBit;
+  //mode = 3;
+  //If not main jeopardy backgroun, only run once
+  if (mode != 1)
+    playSong(mode);
+}
+
+void loop() {
+  // If jeopardy background, run repeatedly
+  if (mode == 1)
+    playSong(mode);
+}
+
+// Theme is notes, beats is length of notes
+// 8 = quarter, 16 = half, 4 = eighth
+int jeopardy_theme[] = {g, C, g, c, g, C, g, g, C, g, C, E, D, C, b, a, aflat, g, C, g, c, g, C, g, C, a, g, f, e, d, c, rest};
+int jeopardy_beats[] = {8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 12, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 16, 12, 4, 8, 8, 8, 8, 8, 8};
+
+int chest_theme[] = {a, asharp, b, C};
+int chest_beats[] = {8, 8, 8, 32};
+
+int ff_victory_theme[] = {C, C, C, C, aflat, asharp, C, b, C};
+int ff_victory_beats[] = {3, 2, 3, 8, 8, 8, 6, 2, 16};
+
+int ff_victory_theme2[] = {D, D, D, D, asharp, C, D, C,
+                           D, a, g, a, g, C, C, b,
+                           C, b, b, a, g, fsharp, g, e,
+                           rest, a, g, a, g, C, C, b,
+                           C, b, b, a, g, a, C, D
+                          };
+int ff_victory_beats2[] = {3, 2, 3, 8, 8, 8, 6, 2,
+                           24, 8, 8, 8, 4, 8, 4, 8,
+                           4, 8, 4, 8, 8, 8, 4, 32,
+                           8, 8, 8, 8, 4, 8, 4, 8,
+                           4, 8, 4, 8, 8, 8, 4, 32
+                          };
+
+int fail_tones[] = {low, low, low};
+int fail_beats[] = {8, 8, 16};
+
+void playSong(int s) {
+  if (s == 0)
+    noTone(speakerOut);
+  else if (s == 1) {
+    // play jeopardy repeatedly
+    int melodyLength = sizeof(jeopardy_theme) / sizeof(int);
+    for (int currentNote = 0; currentNote < melodyLength; currentNote++) {
+      int noteDuration = jeopardy_beats[currentNote] * 40;
+      tone(speakerOut, jeopardy_theme[currentNote], noteDuration);
+      int pause = noteDuration * 1.3;
+      delay(pause);
+      tone(speakerOut, 0, noteDuration);
+    }
+  }
+  else if (s == 2) {
+    // play chest song
+    int melodyLength = sizeof(chest_theme) / sizeof(int);
+    for (int currentNote = 0; currentNote < melodyLength; currentNote++) {
+      int noteDuration = chest_beats[currentNote] * 30;
+      tone(speakerOut, chest_theme[currentNote], noteDuration);
+      int pause = noteDuration * 1.3;
+      delay(pause);
+      tone(speakerOut, 0, noteDuration);
+    }
+  }
+  else if (s == 3) {
+    // play victory song
+    int melodyLength = sizeof(ff_victory_theme2) / sizeof(int);
+    for (int currentNote = 0; currentNote < melodyLength; currentNote++) {
+      int noteDuration = ff_victory_beats2[currentNote] * 30;
+      tone(speakerOut, ff_victory_theme2[currentNote], noteDuration);
+      int pause = noteDuration * 1.3;
+      delay(pause);
+      tone(speakerOut, 0, noteDuration);
+    }
+  }
+  else if (s == 4) {
+    // play victory song
+    int melodyLength = sizeof(fail_tones) / sizeof(int);
+    for (int currentNote = 0; currentNote < melodyLength; currentNote++) {
+      int noteDuration = fail_beats[currentNote] * 30;
+      tone(speakerOut, fail_tones[currentNote], noteDuration);
+      int pause = noteDuration * 1.3;
+      delay(pause);
+      tone(speakerOut, 0, noteDuration);
+    }
+  }
+}
